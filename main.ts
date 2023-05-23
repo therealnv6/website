@@ -5,7 +5,6 @@ interface Command {
 
 const user_prompt = `<span style="color: green">riven</span><span style="color: white">@rust</span><span style="color: green"> ~</span><span style="color: white">></span>`;
 const about = `
-  <h2>! I'm currently looking to get hired! Contact me at nosequel@protonmail.com !</h2><br>
   <h3>Story</h3>
   <p>
     I'm an experienced software developer, mostly familiar with C++, Rust, Java. I started coding when I was 10 as a hobby,
@@ -85,20 +84,23 @@ const commands: Command[] = [
 
 const terminalElement = document.getElementById("terminal");
 
-let currentCommandIndex = 0;
-let terminalOutput = "";
-
 document.addEventListener("DOMContentLoaded", function(){
   executeCommand();
 });
 
 function executeCommand() {
     const outputElement = document.getElementById("output");
+    let index = 0;
 
     for (const command of commands) {
       const output = processCommand(command.command);
-      outputElement.innerHTML += `<div class=\"command-prompt\">${user_prompt} ${command.command}</div>`;
-      outputElement.innerHTML += "<div>".concat(output, "</div>");
+
+      const outputClass = "output";
+      const promptClass = index++ == 0 ? "typeme" : outputClass; 
+       
+      outputElement.innerHTML += `<div class="${promptClass}">${user_prompt} ${command.command}</div>`;
+      outputElement.innerHTML = outputElement.innerHTML.trim();
+      outputElement.innerHTML += `<div class="${outputClass}">`.concat(output, "</div>");
     }
 
     scrollToBottom();
@@ -109,26 +111,6 @@ function processCommand(command: string): string {
         if (cmd.command === command) {
             return cmd.output;
         }
-    }
-    return `Command not found: ${command}`;
-}
-
-
-function cyclePreviousCommand() {
-    const inputElement = terminalElement?.querySelector("input");
-    if (currentCommandIndex > 0) {
-        currentCommandIndex--;
-        inputElement!.value = commands[currentCommandIndex].command;
-    }
-}
-
-function cycleNextCommand() {
-    const inputElement = terminalElement?.querySelector("input");
-    if (currentCommandIndex < commands.length - 1) {
-        currentCommandIndex++;
-        inputElement!.value = commands[currentCommandIndex].command;
-    } else {
-        inputElement!.value = "";
     }
 }
 
