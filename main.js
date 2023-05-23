@@ -18,9 +18,10 @@ function executeCommand() {
         var command = commands_1[_i];
         var output = processCommand(command.command);
         var outputClass = "output";
-        var promptClass = index++ == 0 ? "typeme" : outputClass;
-        outputElement.innerHTML += "<div class=\"".concat(promptClass, "\">").concat(user_prompt, " ").concat(command.command, "</div>");
-        outputElement.innerHTML = outputElement.innerHTML.trim();
+        var promptClass = index == 0 ? "" : outputClass;
+        var commandClass = index == 0 ? "typeme" : outputClass;
+        index++;
+        outputElement.innerHTML += "\n        <p class = \"".concat(promptClass, "\" style=\"display: inline-block;\">").concat(user_prompt, "</p>\n        <span class=\"").concat(commandClass, "\" style=\"display: inline-block;\">").concat(command.command, "</span>\n      ");
         outputElement.innerHTML += "<div class=\"".concat(outputClass, "\">").concat(output, "</div>");
     }
     scrollToBottom();

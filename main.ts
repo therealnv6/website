@@ -1,8 +1,3 @@
-interface Command {
-    command: string;
-    output: string;
-}
-
 const user_prompt = `<span style="color: green">riven</span><span style="color: white">@rust</span><span style="color: green"> ~</span><span style="color: white">></span>`;
 const about = `
   <h3>Story</h3>
@@ -76,47 +71,54 @@ const languages = `
   </ul> 
 `;
 
+interface Command {
+    command: string;
+    output: string;
+}
+
+const terminalElement = document.getElementById("terminal");
 const commands: Command[] = [
     { command: "cat about.md", output: about },
     { command: "cat interests.md", output: interests },
     { command: "cat languages.md", output: languages }
 ];
 
-const terminalElement = document.getElementById("terminal");
 
 document.addEventListener("DOMContentLoaded", function(){
-  executeCommand();
+  const outputElement = document.getElementById("output");
+  let index = 0;
+
+  for (const command of commands) {
+    const output = processCommand(command.command);
+
+    const outputClass = "output";
+    const promptClass = index == 0 ? "" : outputClass;
+    const commandClass = index == 0 ? "typeme" : outputClass;
+
+    index++;
+
+    outputElement.innerHTML += `
+      <p class = "${promptClass}" style="display: inline-block;">${user_prompt}</p>
+      <span class="${commandClass}" style="display: inline-block;">${command.command}</span>
+    `;
+
+    outputElement.innerHTML += `<div class="${outputClass}">`.concat(output, "</div>");
+  }
+
+  scrollToBottom();
 });
 
-function executeCommand() {
-    const outputElement = document.getElementById("output");
-    let index = 0;
-
-    for (const command of commands) {
-      const output = processCommand(command.command);
-
-      const outputClass = "output";
-      const promptClass = index++ == 0 ? "typeme" : outputClass; 
-       
-      outputElement.innerHTML += `<div class="${promptClass}">${user_prompt} ${command.command}</div>`;
-      outputElement.innerHTML = outputElement.innerHTML.trim();
-      outputElement.innerHTML += `<div class="${outputClass}">`.concat(output, "</div>");
-    }
-
-    scrollToBottom();
-}
-
 function processCommand(command: string): string {
-    for (const cmd of commands) {
-        if (cmd.command === command) {
-            return cmd.output;
-        }
-    }
+  for (const cmd of commands) {
+      if (cmd.command === command) {
+          return cmd.output;
+      }
+  }
 }
 
 function scrollToBottom() {
-    terminalElement?.scroll({
-        top: terminalElement.scrollHeight,
-        behavior: "smooth"
-    });
+  terminalElement?.scroll({
+      top: terminalElement.scrollHeight,
+      behavior: "smooth"
+  });
 }

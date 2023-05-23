@@ -24,8 +24,6 @@
 body {
   min-height: 95vh;
   padding: 1rem;
-  display: flex;
-  flex-direction: column;
   font-size: 1rem;
   max-width: 55%;
 }
@@ -115,10 +113,6 @@ a {
 @media (min-width: 600px) {
   body {
     font-size: 1.15rem;
-  }
-  
-  .typeme {
-    width: 100%;
   }
   
   h2, h3 {
