@@ -1,4 +1,4 @@
-const user_prompt = `<span style="color: green">riven</span><span style="color: white">@rust</span><span style="color: green"> ~</span><span style="color: white">></span>`;
+const user_prompt = `<span style="color: green">riven</span><span style="color: white">@zondervan</span><span style="color: green"> ~</span><span style="color: white">></span>`;
 const about = `
   <h3>Story</h3>
   <p>
