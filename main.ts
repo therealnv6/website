@@ -83,7 +83,6 @@ const commands: Command[] = [
     { command: "cat languages.md", output: languages }
 ];
 
-
 document.addEventListener("DOMContentLoaded", function(){
   const outputElement = document.getElementById("output");
   let index = 0;
@@ -93,13 +92,10 @@ document.addEventListener("DOMContentLoaded", function(){
 
     const outputClass = "output";
     const promptClass = index == 0 ? "" : outputClass;
-    const commandClass = index == 0 ? "typeme" : outputClass;
 
     index++;
-
     outputElement.innerHTML += `
-      <p class = "${promptClass}" style="display: inline-block;">${user_prompt}</p>
-      <span class="${commandClass}" style="display: inline-block;">${command.command}</span>
+      <p class = "${promptClass}" style="display: inline-block;">${user_prompt} ${command.command}</p>
     `;
 
     outputElement.innerHTML += `<div class="${outputClass}">`.concat(output, "</div>");
