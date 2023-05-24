@@ -7,9 +7,9 @@
   I don't want to use an already made library for my projects, no, I want to make everything from scratch. That's why, I decided to make my own C++ wrapper around Vulkan first, and now using the easier OpenGL library.
   <br><br>
   What is the difference? Well, there is a HUGE difference. My Vulkan framework had ~140 LOC for a simple buffer implementation supporting staging buffers, uniform buffers, etc. Now my new buffer class in OpenGL is about
-  ~20 LOC. Yes, you read that right, a 120 LOC decrease! Don't believe me? Here is my implementation!
+  ~20 LOC. Yes, you read that right, a 120 LOC decrease! Don't believe me? Here is my implementation!<br>
 
- <img src="https://github.com/therealnv6/website/blob/main/blog/screenshots/blog-01-code.png?raw=true"> 
+ <img src="https://github.com/therealnv6/website/blob/main/blog/screenshots/blog-01-code.png?raw=true"><br>
 
   Now I realize this might not be the most thorough implementation for an OpenGL buffer class, but I can basically achieve the same thing using this code in OpenGL as I could in Vulkan.
   <br><br>
