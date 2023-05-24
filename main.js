@@ -35,15 +35,15 @@ document.addEventListener("DOMContentLoaded", function () {
     scrollToBottom();
 });
 function processCommand(command, fade) {
+    var outputClass = "output";
+    var promptClass = fade ? "" : outputClass;
+    printPrompt(command, promptClass);
     if (command === "clear") {
         outputElement.innerHTML = "";
         return;
     }
-    var outputClass = "output";
-    var promptClass = fade ? "" : outputClass;
-    printPrompt(command, promptClass);
     if (command.includes("blogs/")) {
-        printBlog("blog-24-05-2023");
+        printBlog(command.replace("cat blogs/", ""));
     }
     for (var _i = 0, commands_2 = commands; _i < commands_2.length; _i++) {
         var cmd = commands_2[_i];
@@ -54,14 +54,15 @@ function processCommand(command, fade) {
     }
 }
 function printBlog(blog) {
-    var text = "hai";
-    fetch("https://raw.githubusercontent.com/therealnv6/website/main/blog/".concat(text))
+    fetch("https://raw.githubusercontent.com/therealnv6/website/main/blog/".concat(blog))
         .then(function (response) { return response.text(); })
-        .then(function (data) { return outputElement.innerHTML += data; });
+        .then(function (data) {
+        outputElement.innerHTML += "<div class=\"output\">".concat(data, "</div>");
+    });
 }
 function printPrompt(command, promptClass) {
     if (promptClass === void 0) { promptClass = ""; }
-    outputElement.innerHTML += "\n    <p class = \"".concat(promptClass, "\" style=\"display: inline-block;\">").concat(user_prompt, " ").concat(command, "</p>\n  ");
+    outputElement.innerHTML += "\n    <p class = \"".concat(promptClass, "\" style=\"display: inline-block;\">").concat(user_prompt, " ").concat(command, "</p><br>\n  ");
 }
 function scrollToBottom() {
     terminalElement === null || terminalElement === void 0 ? void 0 : terminalElement.scroll({

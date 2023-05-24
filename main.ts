@@ -120,19 +120,18 @@ document.addEventListener("DOMContentLoaded", function(){
 });
 
 function processCommand(command: string, fade: boolean) {
-  if (command === "clear") {
-    outputElement.innerHTML = "";
-    return;
-  }
-
-
   const outputClass = "output";
   const promptClass = fade ? "" : outputClass;
 
   printPrompt(command, promptClass);
 
+  if (command === "clear") {
+    outputElement.innerHTML = "";
+    return;
+  }
+
   if (command.includes("blogs/")) {
-    printBlog("blog-24-05-2023");
+    printBlog(command.replace("cat blogs/", ""));
   }
 
   for (const cmd of commands) {
@@ -144,15 +143,16 @@ function processCommand(command: string, fade: boolean) {
 }
 
 function printBlog(blog: string) {
-  var text: string = "hai";
-  fetch(`https://raw.githubusercontent.com/therealnv6/website/main/blog/${text}`)
+  fetch(`https://raw.githubusercontent.com/therealnv6/website/main/blog/${blog}`)
     .then(response => response.text())
-    .then(data => outputElement.innerHTML += data);
+    .then(data => {
+      outputElement.innerHTML += `<div class="output">${data}</div>`
+    });
 }
 
 function printPrompt(command: string, promptClass: string = "") {
   outputElement.innerHTML += `
-    <p class = "${promptClass}" style="display: inline-block;">${user_prompt} ${command}</p>
+    <p class = "${promptClass}" style="display: inline-block;">${user_prompt} ${command}</p><br>
   `;
 }
 
