@@ -2,14 +2,18 @@
 <p>
   Today I realised Vulkan is a bit too verbose what I'm trying to do for now, and have decided to ditch my <a href="https://github.com/therealnv6/vx-gfx">open-source engine</a> for the time being. 
   Instead, I decided to rewrite my engine using OpenGL. OpenGL is a lot less verbose, and although I have less control, I don't need the kind of control Vulkan provides for my voxel engine.
+
   <br><br>
+
   Vulkan gives so much control - a bit too much for my liking. Making a quick prototype project is basically impossible without using a framework for Vulkan. However, if you're reading this, you probably know me.
   I don't want to use an already made library for my projects, no, I want to make everything from scratch. That's why, I decided to make my own C++ wrapper around Vulkan first, and now using the easier OpenGL library.
-  <br><br>
-  What is the difference? Well, there is a HUGE difference. My Vulkan framework had ~140 LOC for a simple buffer implementation supporting staging buffers, uniform buffers, etc. Now my new buffer class in OpenGL is about
-  ~20 LOC. Yes, you read that right, a 120 LOC decrease! Don't believe me? <a href="https://pastebin.com/5PF7pT37">Here</a> is my implementation!<br>
 
-  Now I realize this might not be the most thorough implementation for an OpenGL buffer class, but I can basically achieve the same thing using this code in OpenGL as I could in Vulkan.
+  <br><br>
+
+  What is the difference? Well, there is a HUGE difference. My Vulkan framework had ~140 LOC for a simple buffer implementation supporting staging buffers, uniform buffers, etc. Now my new buffer class in OpenGL is about
+  ~20 LOC. Yes, you read that right, a 120 LOC decrease! Don't believe me? <a href="https://pastebin.com/5PF7pT37">Here</a> is my implementation! Now I realize this might not be the most 
+  thorough implementation for an OpenGL buffer class, but I can basically achieve the same thing using this code in OpenGL as I could in Vulkan.
+
   <br><br>
   I guess the main takeaway from today's blog is - don't go *too* far. You don't have to do everything yourself. You can take the easier route. Even for companies, 
   as long as you're providing, the work they expect you to deliver, your boss will be happy. Who cares if you're using the greatest and latest technology? 
