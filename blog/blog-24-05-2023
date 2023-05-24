@@ -8,41 +8,9 @@
   <br><br>
   What is the difference? Well, there is a HUGE difference. My Vulkan framework had ~140 LOC for a simple buffer implementation supporting staging buffers, uniform buffers, etc. Now my new buffer class in OpenGL is about
   ~20 LOC. Yes, you read that right, a 120 LOC decrease! Don't believe me? Here is my implementation!
-  <pre>
-    <code>
-namespace buffer
-{
-	enum class draw_type
-	{
-		Static = GL_STATIC_DRAW,
-		Dynamic = GL_DYNAMIC_DRAW,
-		Stream = GL_STREAM_DRAW
-	};
 
-	template<typename T>
-	class buffer
-	{
-	public:
-		buffer(T *data, int size, draw_type type)
-		{
-			glGenBuffers(1, &buffer_id);
-			glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
-			glBufferData(GL_ARRAY_BUFFER, size, reinterpret_cast<const void *>(data), static_cast<int>(type));
-		}
+ <img src=""> 
 
-		void bind()
-		{
-			glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
-		};
-
-	private:
-		GLuint buffer_id;
-	};
-
-	GLuint reserve_vertex_array(GLuint index = 1);
-}
-    </code>
-  </pre>
   Now I realize this might not be the most thorough implementation for an OpenGL buffer class, but I can basically achieve the same thing using this code in OpenGL as I could in Vulkan.
   <br><br>
   I guess the main takeaway from today's blog is - don't go *too* far. You don't have to do everything yourself. You can take the easier route. Even for companies, 
