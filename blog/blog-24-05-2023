@@ -8,7 +8,7 @@
   <br><br>
   What is the difference? Well, there is a HUGE difference. My Vulkan framework had ~140 LOC for a simple buffer implementation supporting staging buffers, uniform buffers, etc. Now my new buffer class in OpenGL is about
   ~20 LOC. Yes, you read that right, a 120 LOC decrease! Don't believe me? Here is my implementation!
-  <code>
+  <pre>
 namespace buffer
 {
 	enum class draw_type
@@ -40,7 +40,7 @@ namespace buffer
 
 	GLuint reserve_vertex_array(GLuint index = 1);
 }
-  </code>
+  </pre>
   Now I realize this might not be the most thorough implementation for an OpenGL buffer class, but I can basically achieve the same thing using this code in OpenGL as I could in Vulkan.
   <br><br>
   I guess the main takeaway from today's blog is - don't go *too* far. You don't have to do everything yourself. You can take the easier route. Even for companies, 
