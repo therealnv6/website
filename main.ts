@@ -71,45 +71,89 @@ const languages = `
   </ul> 
 `;
 
+const blog_list = `
+  <h3>Blogs</h3>
+  <ul>
+    <li><a class="blog">blog-24/05/2023</a></li>
+  </ul>
+`;
+
+const blogs = [
+  "blog-24-05-2023"
+];
+
 interface Command {
     command: string;
     output: string;
 }
 
 const terminalElement = document.getElementById("terminal");
+const outputElement = document.getElementById("output");
+
 const commands: Command[] = [
     { command: "cat about.md", output: about },
+    { command: "cat blogs.md", output: blog_list },
     { command: "cat interests.md", output: interests },
     { command: "cat languages.md", output: languages }
 ];
 
 document.addEventListener("DOMContentLoaded", function(){
-  const outputElement = document.getElementById("output");
   let index = 0;
 
   for (const command of commands) {
-    const output = processCommand(command.command);
+    processCommand(command.command, index++ == 0);
 
-    const outputClass = "output";
-    const promptClass = index == 0 ? "" : outputClass;
+    const blog_elements = Array.from(outputElement.getElementsByClassName('blog')); 
+    let blog_idx = 0;
 
-    index++;
-    outputElement.innerHTML += `
-      <p class = "${promptClass}" style="display: inline-block;">${user_prompt} ${command.command}</p>
-    `;
+    blog_elements.forEach(blog => {
+      const blog_link = blogs[blog_idx++];
 
-    outputElement.innerHTML += `<div class="${outputClass}">`.concat(output, "</div>");
+      blog.addEventListener('click', function handleClick(event) {
+        processCommand("clear", false);
+        processCommand(`cat blogs/${blog_link}`, false)
+      });
+    });
   }
 
   scrollToBottom();
 });
 
-function processCommand(command: string): string {
-  for (const cmd of commands) {
-      if (cmd.command === command) {
-          return cmd.output;
-      }
+function processCommand(command: string, fade: boolean) {
+  if (command === "clear") {
+    outputElement.innerHTML = "";
+    return;
   }
+
+
+  const outputClass = "output";
+  const promptClass = fade ? "" : outputClass;
+
+  printPrompt(command, promptClass);
+
+  if (command.includes("blogs/")) {
+    printBlog("blog-24-05-2023");
+  }
+
+  for (const cmd of commands) {
+    if (cmd.command === command) {
+      const output = cmd.output;
+      outputElement.innerHTML += `<div class="${outputClass}">`.concat(output, "</div>");
+    }
+  }
+}
+
+function printBlog(blog: string) {
+  var text: string = "hai";
+  fetch(`https://raw.githubusercontent.com/therealnv6/website/main/blog/${text}`)
+    .then(response => response.text())
+    .then(data => outputElement.innerHTML += data);
+}
+
+function printPrompt(command: string, promptClass: string = "") {
+  outputElement.innerHTML += `
+    <p class = "${promptClass}" style="display: inline-block;">${user_prompt} ${command}</p>
+  `;
 }
 
 function scrollToBottom() {
