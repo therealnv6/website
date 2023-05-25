@@ -15,25 +15,33 @@ var commands = [
     { command: "cat languages.md", output: languages }
 ];
 document.addEventListener("DOMContentLoaded", function () {
+    var decoded = decodeCommands(document.location.href);
+    if (decoded.length >= 1) {
+        for (var _i = 0, decoded_1 = decoded; _i < decoded_1.length; _i++) {
+            var command = decoded_1[_i];
+            displayCommand(command);
+        }
+        return;
+    }
     var index = 0;
-    var _loop_1 = function (command) {
-        processCommand(command.command, index++ == 0);
-        var blog_elements = Array.from(outputElement.getElementsByClassName('blog'));
-        var blog_idx = 0;
-        blog_elements.forEach(function (blog) {
-            var blog_link = blogs[blog_idx++];
-            blog.addEventListener('click', function handleClick(event) {
-                processCommand("clear", false);
-                processCommand("cat blogs/".concat(blog_link), false);
-            });
-        });
-    };
-    for (var _i = 0, commands_1 = commands; _i < commands_1.length; _i++) {
-        var command = commands_1[_i];
-        _loop_1(command);
+    for (var _a = 0, commands_1 = commands; _a < commands_1.length; _a++) {
+        var command = commands_1[_a];
+        displayCommand(command.command);
     }
     scrollToBottom();
 });
+function displayCommand(command) {
+    processCommand(command, true);
+    var blog_elements = Array.from(outputElement.getElementsByClassName('blog'));
+    var blog_idx = 0;
+    blog_elements.forEach(function (blog) {
+        var blog_link = blogs[blog_idx++];
+        blog.addEventListener('click', function handleClick(event) {
+            processCommand("clear", false);
+            processCommand("cat blogs/".concat(blog_link), false);
+        });
+    });
+}
 function processCommand(command, fade) {
     var outputClass = "output";
     var promptClass = fade ? "" : outputClass;
@@ -43,7 +51,12 @@ function processCommand(command, fade) {
         return;
     }
     if (command.includes("blogs/")) {
-        printBlog(command.replace("cat blogs/", ""));
+        var href = window.location.href;
+        var blog_command = command.replace("cat blogs/", "");
+        if (!href.includes("?")) {
+            window.location.href = "".concat(window.location.href, "?").concat(encodeCommands([command]));
+        }
+        printBlog(blog_command);
     }
     for (var _i = 0, commands_2 = commands; _i < commands_2.length; _i++) {
         var cmd = commands_2[_i];
@@ -59,6 +72,24 @@ function printBlog(blog) {
         .then(function (data) {
         outputElement.innerHTML += "<div class=\"output\">".concat(data, "</div>");
     });
+}
+function decodeCommands(url) {
+    var split_url = url.split('?');
+    var last = split_url[split_url.length - 1];
+    if (last.startsWith("file:///") || last.startsWith("https://") || last.startsWith("http://")) {
+        return [];
+    }
+    var commands = last.split(':');
+    var to_return = [];
+    for (var _i = 0, commands_3 = commands; _i < commands_3.length; _i++) {
+        var command = commands_3[_i];
+        to_return.push(command.replace(/\+/g, ' '));
+    }
+    return to_return;
+}
+function encodeCommands(commands) {
+    var encodedCommands = commands.map(function (command) { return command.replace(/ /g, '+'); });
+    return encodedCommands.join(':');
 }
 function printPrompt(command, promptClass) {
     if (promptClass === void 0) { promptClass = ""; }

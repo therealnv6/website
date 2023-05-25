@@ -91,20 +91,36 @@ const terminalElement = document.getElementById("terminal");
 const outputElement = document.getElementById("output");
 
 const commands: Command[] = [
-    { command: "cat about.md", output: about },
-    { command: "cat blogs.md", output: blog_list },
-    { command: "cat interests.md", output: interests },
-    { command: "cat languages.md", output: languages }
+  { command: "cat about.md", output: about },
+  { command: "cat blogs.md", output: blog_list },
+  { command: "cat interests.md", output: interests },
+  { command: "cat languages.md", output: languages }
 ];
 
 document.addEventListener("DOMContentLoaded", function(){
+  let decoded = decodeCommands(document.location.href);
+
+  if (decoded.length >= 1) {
+    for (const command of decoded) {
+      displayCommand(command);
+    }
+
+    return;
+  }
+
   let index = 0;
 
   for (const command of commands) {
-    processCommand(command.command, index++ == 0);
+    displayCommand(command.command);
+  }
 
+  scrollToBottom();
+});
+
+function displayCommand(command: string) {
+    processCommand(command, true);
     const blog_elements = Array.from(outputElement.getElementsByClassName('blog')); 
-    let blog_idx = 0;
+    var blog_idx = 0;
 
     blog_elements.forEach(blog => {
       const blog_link = blogs[blog_idx++];
@@ -114,10 +130,7 @@ document.addEventListener("DOMContentLoaded", function(){
         processCommand(`cat blogs/${blog_link}`, false)
       });
     });
-  }
-
-  scrollToBottom();
-});
+}
 
 function processCommand(command: string, fade: boolean) {
   const outputClass = "output";
@@ -131,7 +144,14 @@ function processCommand(command: string, fade: boolean) {
   }
 
   if (command.includes("blogs/")) {
-    printBlog(command.replace("cat blogs/", ""));
+    const href = window.location.href;
+    const blog_command = command.replace("cat blogs/", "");
+
+    if (!href.includes("?")) {
+      window.location.href = `${window.location.href}?${encodeCommands([command])}`;
+    }
+
+    printBlog(blog_command);
   }
 
   for (const cmd of commands) {
@@ -148,6 +168,29 @@ function printBlog(blog: string) {
     .then(data => {
       outputElement.innerHTML += `<div class="output">${data}</div>`
     });
+}
+
+function decodeCommands(url: string): string[] {
+  const split_url = url.split('?');
+  const last = split_url[split_url.length - 1];
+  
+  if (last.startsWith("file:///") || last.startsWith("https://") || last.startsWith("http://")) {
+      return [];
+  }
+
+  const commands = last.split(':');
+  var to_return = [];
+
+  for (const command of commands) {
+    to_return.push(command.replace(/\+/g, ' '));
+  }
+
+  return to_return;
+}
+
+function encodeCommands(commands: string[]): string {
+  const encodedCommands = commands.map(command => command.replace(/ /g, '+'));
+  return encodedCommands.join(':');
 }
 
 function printPrompt(command: string, promptClass: string = "") {
