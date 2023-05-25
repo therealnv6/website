@@ -16,6 +16,7 @@
       Entities: Picture an entity as the backbone of our game objects or entities in the registry (or world, as we like to call it). Think of it as a unique identifier for each object, 
       without any inherent data or behavior traits. That's where our components come into play!
     </li>
+    <br>
     <li>
       Components: Ah, components, the data carriers! These little fellas hold all the important information about our entities. 
       They represent various aspects like health, position, velocity, friction, and can even help identify what kind of entity we're dealing with. 
@@ -23,6 +24,7 @@
       Components are like simple data structures, closely associated with an entity, but they don't contain any behavior or logic. 
       They are the building blocks of our ECS!
     </li>
+    <br>
     <li>
       Systems: Here's where the magic happens! Systems are the engines that drive the behavior and logic for specific entities with their components. 
       They work their charm by querying the components, applying the required functionality to all entities that possess those specific components, 
