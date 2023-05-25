@@ -56,3 +56,10 @@
   <br><br>
   It's not even close to finished, but it's extremely nice to work with! Way nicer than directly interacting with raw OpenGL API. Implementing my OpenGL library like this also made it extremely easy to interact with EnTT, our Entity-Component System.
 </p>
+
+<h3>Result</h3>
+<p>
+  At last, here is my result. I haven't done *too* much work today, but I've finished some of the things I started working on yesterday. All in all, 
+  I'm happy with the progress I made considering I haven't put too much work into it. I've posted a video on YouTube demonstrating the current progress of the project.
+</p>
+<iframe width="400" height="400" src="https://www.youtube.com/watch?v=o1l3RzuBR28"></iframe>
