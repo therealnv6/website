@@ -81,7 +81,7 @@ const blog_list = `
 `;
 
 const blogs = [
-  "blog-24-05-2023"
+  "blog-24-05-2023",
   "blog-25-05-2023"
 ];
 
