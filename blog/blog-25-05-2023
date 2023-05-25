@@ -1,0 +1,58 @@
+<h3>25/05/2023</h3>
+<p>
+  Today I worked more on the OpenGL engine I talked about <a href="https://egirldev.gay/?cat+blogs/blog-24-05-2023">last time</a>, and must say I have made some progress. 
+  I'd like to explain my progress here, including all of the different technologies I've decided to use for this project.
+</p>
+
+<h3>Entity-Component System</h3>
+<p>
+  Ah, let's dive deeper into the fascinating world of the Entity-Component System (ECS) that I mentioned before. It's a fantastic pattern, especially for game development, 
+  as it helps organize and manage the behavior and data of entities in such a flexible and efficient manner. Trust me, it's a real game-changer!
+
+  Now, let me break it down for you in my own words. An ECS is made up of three essential components, 
+  each playing a crucial role in making our code less tangled and more structured. Here's a rundown of these components:
+  <ol>
+    <li>
+      Entities: Picture an entity as the backbone of our game objects or entities in the registry (or world, as we like to call it). Think of it as a unique identifier for each object, 
+      without any inherent data or behavior traits. That's where our components come into play!
+    </li>
+    <li>
+      Components: Ah, components, the data carriers! These little fellas hold all the important information about our entities. 
+      They represent various aspects like health, position, velocity, friction, and can even help identify what kind of entity we're dealing with. 
+      You can attach multiple components to an entity, and then we can easily query them from the registry. 
+      Components are like simple data structures, closely associated with an entity, but they don't contain any behavior or logic. 
+      They are the building blocks of our ECS!
+    </li>
+    <li>
+      Systems: Here's where the magic happens! Systems are the engines that drive the behavior and logic for specific entities with their components. 
+      They work their charm by querying the components, applying the required functionality to all entities that possess those specific components, 
+      and even mutating the components if needed. It's like a choreographer directing a grand performance! Systems can handle all sorts of behaviors, like updating entity positions, 
+      rendering to the surface, managing health, editing the inventory, and so much more. They bring life to our entities!
+    </li>
+  </ol>
+</p>
+
+<h3>ImGui</h3>
+<p>
+  ImGui is an incredibly convenient tool for fast prototyping and debugging in my OpenGL engine. It allows me to quickly create user interfaces without worrying about complex UI state management. 
+  With its immediate mode paradigm, I can effortlessly design windows, buttons, sliders, and more. 
+  ImGui seamlessly integrates with OpenGL, making it perfect for in-game debugging tools and configuration panels. It's a highly customizable framework with an intuitive API, 
+  making it ideal for rapid interface development. ImGui is an extremely nice technology for fast prototyping and debugging environments.
+</p>
+
+<h3>OpenGL Abstraction</h3>
+<p>
+  Let's talk about the OpenGL abstraction layer I've been working on for my engine. It's a powerful component that allows me to utilize the capabilities of OpenGL while harnessing the benefits of modern C++ features and low-level programming. 
+  By abstracting OpenGL, I can create a clean and intuitive interface that simplifies the process of working with graphics. 
+  I use the power of C++ modern features, such as classes, templates, and lambdas, to encapsulate the low-level intricacies of OpenGL. 
+  This approach not only improves the readability and maintainability of my code but also enhances its performance. With the OpenGL abstraction, I can encapsulate OpenGL objects and operations into high-level classes. 
+  This means I can easily create and manage resources like shaders, textures, buffers, and framebuffers. I can also define rendering pipelines, set up vertex and fragment shaders, and perform various rendering operations with a concise and expressive syntax.
+  The abstraction layer allows me to handle error checking and resource management automatically, reducing the chances of memory leaks or incorrect OpenGL usage. 
+  It provides me with a robust and safe interface to interact with OpenGL, shielding me from the complexities of the underlying API.
+  Furthermore, the OpenGL abstraction supports the latest features and extensions of OpenGL, enabling me to take full advantage of the capabilities provided by modern GPUs. 
+  I can utilize techniques like instanced rendering, geometry shaders, or compute shaders seamlessly within my engine.
+  Overall, the combination of C++ modern features and low-level programming in the OpenGL abstraction layer empowers me to create efficient and flexible graphics pipelines for my engine. 
+  It provides a clean and intuitive interface while leveraging the full potential of OpenGL. This abstraction layer is an essential component that elevates the performance and development experience of my OpenGL engine.
+  <br><br>
+  It's not even close to finished, but it's extremely nice to work with! Way nicer than directly interacting with raw OpenGL API. Implementing my OpenGL library like this also made it extremely easy to interact with EnTT, our Entity-Component System.
+</p>

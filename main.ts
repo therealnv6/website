@@ -1,4 +1,5 @@
 const user_prompt = `<span style="color: #50fa7b">riven</span><span style="color: #ffffff">@zondervan</span><span style="color: #50fa7b"> ~</span><span style="color: #ffffff">></span>`;
+
 const about = `
   <h3>Story</h3>
   <p>
@@ -75,11 +76,13 @@ const blog_list = `
   <h3>Blogs</h3>
   <ul>
     <li><a class="blog">blog-24/05/2023</a></li>
+    <li><a class="blog">blog-25/05/2023</a></li>
   </ul>
 `;
 
 const blogs = [
   "blog-24-05-2023"
+  "blog-25-05-2023"
 ];
 
 interface Command {
