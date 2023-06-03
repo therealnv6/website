@@ -77,12 +77,14 @@ const blog_list = `
   <ul>
     <li><a class="blog">blog-24/05/2023</a></li>
     <li><a class="blog">blog-25/05/2023</a></li>
+    <li><a class="blog">blog-slow-1</a></li>
   </ul>
 `;
 
 const blogs = [
   "blog-24-05-2023",
-  "blog-25-05-2023"
+  "blog-25-05-2023",
+  "blog-slow-1",
 ];
 
 interface Command {

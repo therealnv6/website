@@ -1,0 +1,189 @@
+<h3>Introduction to Slow</h3>
+What is Slow? Slow is a simple database written in C++, it is not meant to be used, instead, I wrote it for fun and to write a small blog about. It's written entirely in C++, using TCP using the unix socket API. People 
+may think a lot of works goes into a simple database, however that is not the case, or rather, that does not *have* to be the case. Of course, big databases that are widely used such as MongoDB, MySQL, MariaDB, any all
+of the other mainstream databases have a huge and very complex codebase to handle the highest amounts of data with horizontal and/or vertical scaling, advanced indexing, complex compounds, etc. 
+In this blog, and in Slow as well, I decided to stay within a very small region: data. I just store data in a server, and I have queries to retrieve the data. 
+How hard does that sound? Not hard at all. I'll be walking through the steps I undertook in this blog.
+
+<h3>Prerequisites</h3>
+Of course, what would a demonstration blog be without prerequisites? Here are the things I'm expecting you to have understanding of:
+<ul>
+  <li>Basic C++ knowledge</li>
+</ul>
+... that's about it. Yes, that's right, just C++ knowledge is required to follow along. I will try to refrain from using complex terminology in this blog, and thus make it easy to follow along. 
+
+<h3>Our data structure</h3>
+Data can be structured in many different ways; some significantly more performant than others. The most obvious, 
+and the design I chose to take for this blog, was a simple <code>std::unordered_map<std::string, std::string></code>.
+Everyone who has used C++ should know how to use a map, and therefore also an unordered_map. It's one of the most simple structures that we  could use for a project like this. 
+<br>
+<br>
+So... how would we handle things like integers? Well, conveniently, and obviously, we can store integers as strings. Same for most other datatypes you could think of; booleans, floats. Even 
+complex structures can be serialized into strings if required (not recommended for a KV database like this!).
+<br>
+<br>
+Enough explaining, here is a simple demonstration of how you could write this data structure:
+
+<pre>
+<code>
+class dataset
+	{
+	public:
+		dataset()
+		{
+		}
+
+		void set(const data::key &key, const data::value &value)
+		{
+			data[key] = value;
+		}
+
+		bool del(const data::key &key)
+		{
+			if (!this->has(key))
+			{
+				return false;
+			}
+
+			data.erase(data.find(key));
+			return true;
+		}
+
+		[[nodiscard("must be used, only checks if data container contains the key")]] bool has(data::key key)
+		{
+			return data.contains(key);
+		}
+
+		[[nodiscard("must be used, only retrieves size")]] uint size()
+		{
+			return data.size();
+		}
+
+		template<typename T>
+		[[nodiscard("must be used, only returns the value retrieved from the data container")]] T get(const std::string &key);
+
+	private:
+		std::unordered_map<data::key, data::value> data;
+	};</code>
+</pre> 
+
+This is a more barebones example of what I implemented in the open-source project slow, which can be found on GitHub. 
+As you can see, this is a very simple structure. I feel like everyone should be able to follow what's happening so far. 
+
+<h3>Sockets</h3>
+Now, what is a database if you can't even access the data stored within the database? This is why we have to implement a way to communicate with the server, 
+the way I decided to do this is just using simple TCP sockets. Other databses such as Redis also use this very simple strategy, and can be highly adaptable. 
+Not much explaining needs to be put into this, I'll add some comments to the code to ensure clarity.
+
+<pre>
+<code>
+const int BUFFER_SIZE = 1024;
+
+class tcp_server
+	{
+	public:
+		tcp_server(int port)
+		{
+			server_sock = socket(AF_INET, SOCK_STREAM, 0);
+			if (server_sock == -1)
+			{
+				throw std::runtime_error("error creating socket");
+			}
+
+			// Prepare the server address
+			sockaddr_in address {
+				.sin_family = AF_INET,
+				.sin_port = htons(port),
+			};
+
+			address.sin_addr.s_addr = INADDR_ANY;
+
+			// Bind the socket to the server address
+			if (bind(server_sock, (struct sockaddr *) &address, sizeof(address)) == -1)
+			{
+        // as described by the error message, this usually means there's a server running on the same port. 
+        // either the program didn't shutdown properly, or a different program is using the same port.
+				throw std::runtime_error("error binding socket (is there already a server running on this port?)");
+			}
+
+			// Listen for incoming connections
+			if (listen(server_sock, 5) == -1)
+			{
+				close(server_sock);
+				throw std::runtime_error("error listening for connections");
+			}
+		}
+
+		~tcp_server()
+		{
+      // we have to make sure we close the server socket when the tcp_server class gets deconstructed, otherwise we will have dangling connections.
+			close(server_sock);
+		}
+
+		void accept_client()
+		{
+			sockaddr_in address;
+			socklen_t address_length = sizeof(address);
+
+			int clientSocket = accept(server_sock, (struct sockaddr *) &address, &address_length);
+
+			if (clientSocket == -1)
+			{
+				throw std::runtime_error("error accepting client connection");
+			}
+
+			// Receive client request
+			memset(buffer, 0, sizeof(buffer));
+			ssize_t bytesRead = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
+
+			if (bytesRead == -1)
+			{
+				throw std::runtime_error("error receiving data from client");
+			}
+
+			client_socks.push_back(clientSocket);
+		}
+
+		void close_clients()
+		{
+			for (int socket : client_socks)
+			{
+				close(socket);
+			}
+
+			client_socks.clear();
+		}
+
+		void send_to_client(std::string response)
+		{
+			auto cstr = response.c_str();
+			int length = response.size();
+
+			for (int socket : client_socks)
+			{
+				if (send(socket, response.c_str(), response.size(), 0) == -1)
+				{
+					throw std::runtime_error("error sending response to client");
+				}
+			}
+		}
+
+		char *get_buffer()
+		{
+			return buffer;
+		}
+
+		std::string get_buffer_as_str()
+		{
+			return buffer;
+		}
+
+	private:
+		char buffer[BUFFER_SIZE];
+		int server_sock;
+		std::vector<int> client_socks;
+	};
+</code>
+</pre>
+
+<h3>todo: write explanation about this tcp class, finish blog</h3>
