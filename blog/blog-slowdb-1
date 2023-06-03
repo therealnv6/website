@@ -33,7 +33,7 @@
 </p>
 
 <pre>
-<code>
+<code class="cpp">
 class dataset
 	{
 	public:
@@ -91,7 +91,7 @@ class dataset
 </p>
 
 <pre>
-<code>
+<code class="cpp">
 const int BUFFER_SIZE = 1024;
 
 class tcp_server
