@@ -7,13 +7,17 @@
   How hard does that sound? Not hard at all. I'll be walking through the steps I undertook in this blog.
 </p>
 
+<br>
+<br>
 <h3>Prerequisites</h3>
-Of course, what would a demonstration blog be without prerequisites? Here are the things I'm expecting you to have understanding of:
+<p>Of course, what would a demonstration blog be without prerequisites? Here are the things I'm expecting you to have understanding of:</p>
 <ul>
   <li>Basic C++ knowledge</li>
 </ul>
 <p>... that's about it. Yes, that's right, just C++ knowledge is required to follow along. I will try to refrain from using complex terminology in this blog, and thus make it easy to follow along.</p> 
 
+<br>
+<br>
 <h3>Our data structure</h3>
 <p>
   Data can be structured in many different ways; some significantly more performant than others. The most obvious, 
@@ -71,10 +75,13 @@ class dataset
 	};</code>
 </pre> 
 
+<br>
 <p>
   This is a more barebones example of what I implemented in the open-source project slow, which can be found on GitHub. 
   As you can see, this is a very simple structure. I feel like everyone should be able to follow what's happening so far. 
 </p>
+<br>
+<br>
 
 <h3>Sockets</h3>
 <p>
@@ -194,4 +201,6 @@ class tcp_server
 </code>
 </pre>
 
+<br>
+<br>
 <h3>todo: write explanation about this tcp class, finish blog</h3>
