@@ -1,28 +1,32 @@
 <h3>Introduction to Slow</h3>
-What is Slow? Slow is a simple database written in C++, it is not meant to be used, instead, I wrote it for fun and to write a small blog about. It's written entirely in C++, using TCP using the unix socket API. People 
-may think a lot of works goes into a simple database, however that is not the case, or rather, that does not *have* to be the case. Of course, big databases that are widely used such as MongoDB, MySQL, MariaDB, any all
-of the other mainstream databases have a huge and very complex codebase to handle the highest amounts of data with horizontal and/or vertical scaling, advanced indexing, complex compounds, etc. 
-In this blog, and in Slow as well, I decided to stay within a very small region: data. I just store data in a server, and I have queries to retrieve the data. 
-How hard does that sound? Not hard at all. I'll be walking through the steps I undertook in this blog.
+<p>
+  What is Slow? Slow is a simple database written in C++, it is not meant to be used, instead, I wrote it for fun and to write a small blog about. It's written entirely in C++, using TCP using the unix socket API. People 
+  may think a lot of works goes into a simple database, however that is not the case, or rather, that does not *have* to be the case. Of course, big databases that are widely used such as MongoDB, MySQL, MariaDB, any all
+  of the other mainstream databases have a huge and very complex codebase to handle the highest amounts of data with horizontal and/or vertical scaling, advanced indexing, complex compounds, etc. 
+  In this blog, and in Slow as well, I decided to stay within a very small region: data. I just store data in a server, and I have queries to retrieve the data. 
+  How hard does that sound? Not hard at all. I'll be walking through the steps I undertook in this blog.
+</p>
 
 <h3>Prerequisites</h3>
 Of course, what would a demonstration blog be without prerequisites? Here are the things I'm expecting you to have understanding of:
 <ul>
   <li>Basic C++ knowledge</li>
 </ul>
-... that's about it. Yes, that's right, just C++ knowledge is required to follow along. I will try to refrain from using complex terminology in this blog, and thus make it easy to follow along. 
+<p>... that's about it. Yes, that's right, just C++ knowledge is required to follow along. I will try to refrain from using complex terminology in this blog, and thus make it easy to follow along.</p> 
 
 <h3>Our data structure</h3>
-Data can be structured in many different ways; some significantly more performant than others. The most obvious, 
-and the design I chose to take for this blog, was a simple <code>std::unordered_map<std::string, std::string></code>.
-Everyone who has used C++ should know how to use a map, and therefore also an unordered_map. It's one of the most simple structures that we  could use for a project like this. 
+<p>
+  Data can be structured in many different ways; some significantly more performant than others. The most obvious, 
+  and the design I chose to take for this blog, was a simple <code>std::unordered_map<std::string, std::string></code>.
+  Everyone who has used C++ should know how to use a map, and therefore also an unordered_map. It's one of the most simple structures that we  could use for a project like this. 
 <br>
 <br>
-So... how would we handle things like integers? Well, conveniently, and obviously, we can store integers as strings. Same for most other datatypes you could think of; booleans, floats. Even 
-complex structures can be serialized into strings if required (not recommended for a KV database like this!).
+  So... how would we handle things like integers? Well, conveniently, and obviously, we can store integers as strings. Same for most other datatypes you could think of; booleans, floats. Even 
+  complex structures can be serialized into strings if required (not recommended for a KV database like this!).
 <br>
 <br>
-Enough explaining, here is a simple demonstration of how you could write this data structure:
+  Enough explaining, here is a simple demonstration of how you could write this data structure:
+</p>
 
 <pre>
 <code>
@@ -67,13 +71,17 @@ class dataset
 	};</code>
 </pre> 
 
-This is a more barebones example of what I implemented in the open-source project slow, which can be found on GitHub. 
-As you can see, this is a very simple structure. I feel like everyone should be able to follow what's happening so far. 
+<p>
+  This is a more barebones example of what I implemented in the open-source project slow, which can be found on GitHub. 
+  As you can see, this is a very simple structure. I feel like everyone should be able to follow what's happening so far. 
+</p>
 
 <h3>Sockets</h3>
-Now, what is a database if you can't even access the data stored within the database? This is why we have to implement a way to communicate with the server, 
-the way I decided to do this is just using simple TCP sockets. Other databses such as Redis also use this very simple strategy, and can be highly adaptable. 
-Not much explaining needs to be put into this, I'll add some comments to the code to ensure clarity.
+<p>
+  Now, what is a database if you can't even access the data stored within the database? This is why we have to implement a way to communicate with the server, 
+  the way I decided to do this is just using simple TCP sockets. Other databses such as Redis also use this very simple strategy, and can be highly adaptable. 
+  Not much explaining needs to be put into this, I'll add some comments to the code to ensure clarity.
+</p>
 
 <pre>
 <code>
